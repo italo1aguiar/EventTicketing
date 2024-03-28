@@ -1,5 +1,7 @@
 using EventTicketing.Application.Repositories;
+using EventTicketingApi.Infrastructure;
 using EventTicketingApi.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,19 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("OpenCorsPolicy", builder =>
+    {
+        builder.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+builder.Services.AddDbContext<EventContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -22,5 +37,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapControllers();
+
+app.UseCors("OpenCorsPolicy");
 
 app.Run();

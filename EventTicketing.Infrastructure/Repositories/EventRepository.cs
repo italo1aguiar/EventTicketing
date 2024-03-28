@@ -5,6 +5,12 @@ namespace EventTicketingApi.Infrastructure.Repositories;
 
 public class EventRepository: IEventRepository
 {
+    private readonly EventContext _context;
+
+    public EventRepository(EventContext context)
+    {
+        _context = context;
+    }
     public IEnumerable<Event> GetAllEvents()
     {
         return new List<Event>
