@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EventTicketingApi.Infrastructure.Migrations
 {
-    [DbContext(typeof(EventContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240328171702_InitialCreate")]
     partial class InitialCreate
     {

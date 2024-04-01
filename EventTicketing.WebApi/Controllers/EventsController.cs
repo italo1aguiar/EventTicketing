@@ -1,4 +1,7 @@
+using EventTicketing.Application.Commands.CreateEvent;
 using EventTicketing.Application.Repositories;
+using EventTicketing.Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventTicketing.Controllers;
@@ -7,17 +10,17 @@ namespace EventTicketing.Controllers;
 [Route("[controller]")]
 public class EventsController : ControllerBase
 {
-    private readonly IEventRepository _eventRepository;
+    private readonly IMediator _mediator;
 
-    public EventsController(IEventRepository eventRepository)
+    public EventsController(IMediator mediator)
     {
-        _eventRepository = eventRepository;
+        _mediator = mediator;
     }
 
-    [HttpGet]
-    public IActionResult Get()
+    [HttpPost]
+    public async Task<IActionResult> CreateEvent(CreateEventCommand command)
     {
-        var events = _eventRepository.GetAllEvents();
-        return Ok(events);
+        await _mediator.Send(command);
+        return Ok();
     }
-}       
+}

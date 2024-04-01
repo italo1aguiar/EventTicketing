@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EventTicketingApi.Infrastructure.Migrations
 {
-    [DbContext(typeof(EventContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240329153256_NewDomain")]
     partial class NewDomain
     {
