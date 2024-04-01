@@ -1,6 +1,8 @@
+using System.Reflection;
 using EventTicketing.Application.Repositories;
 using EventTicketingApi.Infrastructure;
 using EventTicketingApi.Infrastructure.Repositories;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +13,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
-builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("OpenCorsPolicy", builder =>
@@ -22,8 +23,12 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddDbContext<EventContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
