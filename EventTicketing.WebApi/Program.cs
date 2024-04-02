@@ -1,4 +1,6 @@
+using System.Net.NetworkInformation;
 using System.Reflection;
+using EventTicketing.Application.Mapping;
 using EventTicketing.Application.Repositories;
 using EventTicketingApi.Infrastructure;
 using EventTicketingApi.Infrastructure.Repositories;
@@ -28,7 +30,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+builder.Services.AddMediatR(cfg => 
+    cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+
+builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
 var app = builder.Build();
 
