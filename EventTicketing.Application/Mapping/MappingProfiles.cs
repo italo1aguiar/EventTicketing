@@ -22,5 +22,12 @@ public class MappingProfiles : Profile
         CreateMap<Location, EventLocationDto>();
         CreateMap<EventCategory, EventCategoryDto>();
         CreateMap<TicketType, EventTicketTypeDto>();
+        
+        
+        CreateMap<TicketType, TicketTypeDto>()
+            .ForMember(dest => dest.TicketPricePeriods,
+                opt => opt.MapFrom(src => src.TicketPricePeriods));
+
+        CreateMap<TicketPricePeriod,TicketPricePeriodDto>();
     }
 }
