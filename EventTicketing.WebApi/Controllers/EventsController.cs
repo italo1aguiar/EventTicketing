@@ -1,4 +1,5 @@
 using EventTicketing.Application.Commands.CreateEvent;
+using EventTicketing.Application.Queries.GetAllEvents;
 using EventTicketing.Application.Queries.GetEvent;
 using EventTicketing.Application.Repositories;
 using EventTicketing.Domain.Entities;
@@ -16,6 +17,24 @@ public class EventsController : ControllerBase
     public EventsController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetEvent()
+    {
+        try
+        {
+            var query = new GetAllEventsQuery();
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "An error occurred");
+        }
     }
     [HttpGet("{id}")]
     public async Task<IActionResult> GetEvent(int id)
