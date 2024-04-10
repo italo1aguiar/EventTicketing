@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq.Expressions;
 using EventTicketing.Application.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,20 @@ public class Repository<T> : IRepository<T> where T : class
         return await _dbSet.ToListAsync();
     }
 
+    public async Task<IEnumerable<T?>> GetAllWithDetailsAsync()
+    {
+        IQueryable<T> query = _dbSet;
+        var entityType = _context.Model.FindEntityType(typeof(T));
+
+        // Include all navigation properties
+        foreach (var navigation in entityType.GetNavigations())
+        {
+            query = query.Include(navigation.Name);
+        }
+
+        return await query.ToListAsync();
+    }
+    
     public async Task<T?> GetByIdAsync(int id)
     {
         return await _dbSet.FindAsync(id);
